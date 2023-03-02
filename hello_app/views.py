@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import Flask, render_template
-from .. import app
+from hello_app import app
 import pyodbc
 
 

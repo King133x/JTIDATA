@@ -94,13 +94,31 @@ def add_entry():
         # if GET request, render the add entry template
     return render_template("add_entry.html")
 
-#defines route to send to check page   
-@app.route('/check_entry', methods=['POST'])
+@app.route("/check_entry")
 def check_entry():
-    title = request.form['title']
-    body = request.form['body']
 
-    if not title or not body:
-        return redirect(url_for('add_entry'))
+        # Initialize ODBC connection
+    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:jtilabview.database.windows.net,1433;Database=JTISQL;Uid=LAB;Pwd=450032923Aa!1;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection = pyodbc.connect(connection_string)
 
-    return render_template("add_entry.html")
+        # create a cursor to execute SQL queries
+    cursor = connection.cursor()
+
+        # execute a SELECT query to get the overdues
+
+    today = datetime.date.today()
+    cursor.execute("SELECT * FROM MASTER WHERE due_date < ?", today,)
+
+        # fetch all the rows from the query result
+    rows = cursor.fetchall()
+
+        # close the connection
+    connection.close()
+
+        # convert the rows to a list of dictionaries
+    data = []
+    for row in rows:
+        data.append(dict(zip([column[0] for column in cursor.description], row)))
+
+        # render the template with the data
+    return render_template("check_entry.html", data=data)

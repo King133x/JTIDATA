@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime as dt
 from flask import Flask, render_template, url_for, redirect, request
 from hello_app import app
 import pyodbc
@@ -25,28 +25,22 @@ def contact():
 @app.route("/data")
 def get_data():
 
-        # Initialize ODBC connection
+    # Initialize ODBC connection
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:jtilabview.database.windows.net,1433;Database=JTISQL;Uid=LAB;Pwd=450032923Aa!1;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = pyodbc.connect(connection_string)
-
-        # create a cursor to execute SQL queries
+    # create a cursor to execute SQL queries
     cursor = connection.cursor()
-
-        # execute a SELECT query to get the top 100 rows from your table
+    # execute a SELECT query to get the top 100 rows from your table
     cursor.execute("SELECT TOP 100 * FROM MASTER")
-
-        # fetch all the rows from the query result
+     # fetch all the rows from the query result
     rows = cursor.fetchall()
-
-        # close the connection
+     # close the connection
     connection.close()
-
-        # convert the rows to a list of dictionaries
+    # convert the rows to a list of dictionaries
     data = []
     for row in rows:
-        data.append(dict(zip([column[0] for column in cursor.description], row)))
-
-        # render the template with the data
+     data.append(dict(zip([column[0] for column in cursor.description], row)))
+     # render the template with the data
     return render_template("data.html", data=data)
 
 #defines route to send to entry page
@@ -93,32 +87,3 @@ def add_entry():
         #return redirect(url_for("home"))
         # if GET request, render the add entry template
     return render_template("add_entry.html")
-
-@app.route("/check_entry")
-def check_entry():
-
-        # Initialize ODBC connection
-    connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:jtilabview.database.windows.net,1433;Database=JTISQL;Uid=LAB;Pwd=450032923Aa!1;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
-    connection = pyodbc.connect(connection_string)
-
-        # create a cursor to execute SQL queries
-    cursor = connection.cursor()
-
-        # execute a SELECT query to get the overdues
-
-    today = datetime.date.today()
-    cursor.execute("SELECT * FROM MASTER WHERE due_date < ?", today,)
-
-        # fetch all the rows from the query result
-    rows = cursor.fetchall()
-
-        # close the connection
-    connection.close()
-
-        # convert the rows to a list of dictionaries
-    data = []
-    for row in rows:
-        data.append(dict(zip([column[0] for column in cursor.description], row)))
-
-        # render the template with the data
-    return render_template("check_entry.html", data=data)

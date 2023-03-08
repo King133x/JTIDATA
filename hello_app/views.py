@@ -1,30 +1,27 @@
 from datetime import datetime as dt
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, flash
 from hello_app import app
 import pyodbc
 
+#################################################################################################
 #defines route to send to homepage
 @app.route("/")
 def home():
     return render_template("home.html")
-
-
+#################################################################################################
 #defines route to send to about page
 @app.route("/about/")
 def about():
     return render_template("about.html")
-
-
+#################################################################################################
 #defines route to send to contact page
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
-
-
+#################################################################################################
 #defines route to send to data page
 @app.route("/data")
 def get_data():
-
     # Initialize ODBC connection
     connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:jtilabview.database.windows.net,1433;Database=JTISQL;Uid=LAB;Pwd=450032923Aa!1;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     connection = pyodbc.connect(connection_string)
@@ -42,12 +39,12 @@ def get_data():
      data.append(dict(zip([column[0] for column in cursor.description], row)))
      # render the template with the data
     return render_template("data.html", data=data)
-
+#################################################################################################
 #defines route to send to entry page
 @app.route("/add_entry", methods=["GET", "POST"])
 def add_entry():
+ # get form data
     if request.method == "POST":
-        # get form data
         an = request.form.get("an")
         model = request.form.get("model")
         sn = request.form.get("sn")
@@ -63,27 +60,29 @@ def add_entry():
         cost = request.form.get("cost")
         standard = request.form.get("standard")
         facility = request.form.get("facility")
-
-        # check if item already exists in the database
+    # check if item already exists in the database
         connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:jtilabview.database.windows.net,1433;Database=JTISQL;Uid=LAB;Pwd=450032923Aa!1;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
         connection = pyodbc.connect(connection_string)
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM MASTER WHERE AN = ?", an)
-        
+        cursor.execute("SELECT * FROM MASTER WHERE an = ? AND sn = ?", (an, sn))
         if cursor.fetchone():
-        # item already exists, redirect to home page
+     # item already exists, redirect to home page
+            flash("Item already exists!", "danger") # show pop-up alert
             connection.close()
             return redirect(url_for("home"))
-
-        # item does not exist, insert into database
-
-        #cursor.execute("INSERT INTO MASTER (AN, Model, SN, Nom, LOC, [CAL DATE], DUE, CYCLE, MANUFACTURE, [Procedure used], [SPECIAL CAL], [NOTE], COST, STANDARD, Facility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+    # item does not exist, insert into database
         cursor.execute("INSERT INTO MASTER ([AN],[Model],[SN],[NOM],[LOC],[CAL DATE],[DUE],[CYCLE],[MANUFACTURE],[PROC],[SPECIAL CAL],[NOTE],[COST],[STANDARD],[Facility]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         an, model, sn, nom, location, cal_date, due, cycle, manufacture, procedure, cert_note, tech_note, cost, standard, facility)
         connection.commit()
         connection.close()
-
+        flash("New entry added successfully!", "success") # show pop-up alert
         # redirect to home page
-        #return redirect(url_for("home"))
-        # if GET request, render the add entry template
+        return redirect(url_for("home"))
+#################################################################################################
+#END OF IF for POST if GET request, render the add entry template
+
+
+
+
     return render_template("add_entry.html")
+#################################################################################################

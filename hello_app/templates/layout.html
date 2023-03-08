@@ -14,11 +14,19 @@
             <a href="{{ url_for('get_data') }}" class="navbar-item">Get</a>
             <a href="{{ url_for('add_entry') }}" class="navbar-item">ADD</a>
         </div>
-
         <div class="body-content">
             {% block content %}
             {% endblock %}
             <hr/>
+            {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
             <footer>
                 <p>&copy; 2023</p>
             </footer>

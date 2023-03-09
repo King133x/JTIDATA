@@ -1,7 +1,8 @@
-from datetime import datetime as dt
+from datetime import datetime
 from flask import Flask, render_template, url_for, redirect, request, flash
 from hello_app import app
 import pyodbc
+
 
 #################################################################################################
 #defines route to send to homepage
@@ -13,11 +14,18 @@ def home():
 @app.route("/about/")
 def about():
     return render_template("about.html")
+
+
+
 #################################################################################################
 #defines route to send to contact page
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
+
+
+
+
 #################################################################################################
 #defines route to send to data page
 @app.route("/data")
@@ -28,7 +36,7 @@ def get_data():
     # create a cursor to execute SQL queries
     cursor = connection.cursor()
     # execute a SELECT query to get the top 100 rows from your table
-    cursor.execute("SELECT TOP 100 * FROM MASTER")
+    cursor.execute("SELECT * FROM MASTER")
      # fetch all the rows from the query result
     rows = cursor.fetchall()
      # close the connection
@@ -78,11 +86,7 @@ def add_entry():
         flash("New entry added successfully!", "success") # show pop-up alert
         # redirect to home page
         return redirect(url_for("home"))
-#################################################################################################
+    
 #END OF IF for POST if GET request, render the add entry template
-
-
-
-
     return render_template("add_entry.html")
 #################################################################################################

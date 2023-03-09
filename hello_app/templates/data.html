@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
 {% block title %}
-Contact us
+MASTER DATA
 {% endblock %}
 {% block content %}
-<table>
+<div style="overflow: scroll;">
+  <table>
     <thead>
       <tr>
         {% for column in data[0] %}
@@ -21,7 +22,7 @@ Contact us
       {% endfor %}
     </tbody>
   </table>
-
+</div>
   
-<p>Contact page for JTI CALIBRATION.</p>
+<p>DATA page for JTI CALIBRATION.</p>
 {% endblock %}

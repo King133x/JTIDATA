@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Test Results for Master ID: {{ master_id }}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>UNIT</th>
+        <th>NOM</th>
+        <th>ACTUAL</th>
+        <th>TOL</th>
+        <th>LOWTOL</th>
+        <th>MAXTOL</th>
+        <th>ERROR</th>
+        <th>PASS</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in results %}
+      <tr>
+        <td>{{ row['ID'] }}</td>
+        <td>{{ row['UNIT'] }}</td>
+        <td>{{ row['NOM'] }}</td>
+        <td>{{ row['ACTUAL'] }}</td>
+        <td>{{ row['TOL'] }}</td>
+        <td>{{ row['LOWTOL'] }}</td>
+        <td>{{ row['MAXTOL'] }}</td>
+        <td>{{ row['ERROR'] }}</td>
+        <td>{{ row['PASS'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <h2>Add New Test Results</h2>
+  <form action='/test_results/{{ master_id }}' method="post">
+    <input type="hidden" name="master_id" value="{{ master_id }}">
+    <label for="unit">Unit:</label>
+    <input type="float" name="unit" id="unit">
+    <label for="nom">Nominal:</label>
+    <input type="float" name="nom" id="nom">
+    <label for="actual">Actual:</label>
+    <input type="float" name="actual" id="actual">
+    <label for="tol">Tolerance:</label>
+    <input type="text" name="tol" id="tol">
+    <button type="submit">Add Test Result</button>
+  </form>
+{% endblock %}
+

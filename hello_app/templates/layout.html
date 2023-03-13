@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css') }}"  />
-    </head>
 
-    <body>
-        <div class="navbar">
-            <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
-            <a href="{{ url_for('about') }}" class="navbar-item">About</a>
-            <a href="{{ url_for('contact') }}" class="navbar-item">Contact</a>
-            <a href="{{ url_for('get_data') }}" class="navbar-item">Get</a>
-            <a href="{{ url_for('add_entry') }}" class="navbar-item">ADD</a>
-            <a href="{{ url_for('test_request') }}" class="navbar-item">test</a>
-        </div>
-        <div class="body-content">
-            {% block content %}
-            {% endblock %}
-            <hr/>
-            {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
-            <footer>
-                <p>&copy; 2023</p>
-            </footer>
-        </div>
-    </body>
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css') }}" />
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
+    <a href="{{ url_for('about') }}" class="navbar-item">About</a>
+    <a href="{{ url_for('contact') }}" class="navbar-item">Contact</a>
+    <a href="{{ url_for('get_data') }}" class="navbar-item">Get</a>
+    <a href="{{ url_for('add_entry') }}" class="navbar-item">ADD</a>
+    <a href="{{ url_for('test_request') }}" class="navbar-item">test</a>
+  </div>
+  <div class="body-content">
+    {% block content %}
+    {% endblock %}
+    <hr />
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <footer>
+      <p>&copy; 2023</p>
+    </footer>
+  </div>
+</body>
+
 </html>

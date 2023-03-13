@@ -4,45 +4,55 @@ from flask import Flask, render_template, url_for, redirect, request, flash
 from hello_app import app
 import pyodbc
 #################################################################################################
- # Initialize ODBC connection
+# Initialize PYODBC connection
 connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:jtilabview.database.windows.net,1433;Database=JTISQL;Uid=LAB;Pwd=450032923Aa!1;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 connection = pyodbc.connect(connection_string)
 cursor = connection.cursor()
 #################################################################################################
-#defines route to send to home page
+# defines route to send to home page
+
+
 @app.route("/")
+@app.route("/home")
 def home():
     return render_template("home.html")
 #################################################################################################
-#defines route to send to about page
+# defines route to send to about page
+
+
 @app.route("/about/")
 def about():
     return render_template("about.html")
 #################################################################################################
-#defines route to send to contact page
+# defines route to send to contact page
+
+
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
 #################################################################################################
-#defines route to send to data page
+# defines route to send to data page
+
+
 @app.route("/data")
 def get_data():
-
-    # execute a SELECT query to get the top 100 rows from your table
+    # execute a SELECT query to get rows from your table
     cursor.execute("SELECT * FROM MASTER")
-     # fetch all the rows from the query result
+    # fetch all the rows from the query result
     rows = cursor.fetchall()
     # convert the rows to a list of dictionaries
     data = []
     for row in rows:
-     data.append(dict(zip([column[0] for column in cursor.description], row)))
-     # render the template with the data
+        data.append(dict(zip([column[0]
+                    for column in cursor.description], row)))
+        # render the template with the data
     return render_template("data.html", data=data)
 #################################################################################################
-#defines route to send to entry page
+# defines route to send to entry page
+
+
 @app.route("/add_entry", methods=["GET", "POST"])
-def add_entry():
-    #get form data and and create entry if none exist
+def add_entry():  # get form data and and create entry if none exist
     if request.method == "POST":
         an = request.form.get("an")
         model = request.form.get("model")
@@ -60,77 +70,71 @@ def add_entry():
         standard = request.form.get("standard")
         facility = request.form.get("facility")
         # check if item already exists in the database
-        cursor.execute("SELECT * FROM MASTER WHERE an = ? AND sn = ?", (an, sn))
+        cursor.execute(
+            "SELECT * FROM MASTER WHERE an = ? AND sn = ?", (an, sn))
         if cursor.fetchone():
-        # item already exists, redirect to home page
-            flash("Item already exists!", "danger") # show pop-up alert
+            # item already exists, redirect to home page
+            flash("Item already exists!", "danger")  # show pop-up alert
             return redirect(url_for("home"))
-        # item does not exist, insert into database
-        cursor.execute("INSERT INTO MASTER ([AN],[Model],[SN],[NOM],[LOC],[CAL DATE],[DUE],[CYCLE],[MANUFACTURE],[PROC],[SPECIAL CAL],[NOTE],[COST],[STANDARD],[Facility]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        an, model, sn, nom, location, cal_date, due, cycle, manufacture, procedure, cert_note, tech_note, cost, standard, facility)
-        connection.commit()
-        flash("New entry added successfully!", "success") # show pop-up alert
-        # redirect to home page
-        return redirect(url_for("home"))
-    
-#END OF IF for POST if GET request, render the add entry template
-    return render_template("add_entry.html")
+        else:  # item does not exist, insert into database
+            cursor.execute("INSERT INTO MASTER ([AN],[Model],[SN],[NOM],[LOC],[CAL DATE],[DUE],[CYCLE],[MANUFACTURE],[PROC],[SPECIAL CAL],[NOTE],[COST],[STANDARD],[Facility]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                           an, model, sn, nom, location, cal_date, due, cycle, manufacture, procedure, cert_note, tech_note, cost, standard, facility)
+            connection.commit()
+            flash("New entry added successfully!",
+                  "success")  # show pop-up alert
+            # redirect to home page
+            return redirect(url_for("home"))
+    else:  # if GET request, render the add entry template
+        return render_template("add_entry.html")
 #################################################################################################
-#defines route to send to test input
+# defines route to send to test input
+
+
 @app.route('/test_request.html', methods=['GET', 'POST'])
 def test_request():
     if request.method == 'POST':
         # Get the AN and SN entered by user
         an = request.form['an']
         sn = request.form['sn']
-        cursor.execute('SELECT ID FROM MASTER WHERE AN = ? AND SN = ?', (an, sn))
+        cursor.execute(
+            'SELECT ID FROM MASTER WHERE AN = ? AND SN = ?', (an, sn))
         master_id = cursor.fetchone()
-
         if master_id:
-        # if MasterID exists, render test result page with MasterID passed as parameter
-         master_id = master_id[0]
-         return redirect(url_for('test_results', master_id=master_id))
-
-
-        else:
-        # if MasterID does not exist, render home page with error message passed as parameter
-            flash("there are no test results for master id!", "danger") # show pop-up alert
+            # if MasterID exists, render test result page with MasterID passed as parameter
+            master_id = master_id[0]
+            return redirect(url_for('test_results', master_id=master_id))
+        else:  # if MasterID does not exist, render home page with error message passed as parameter
+            flash("No test results found for the AN, SN!",
+                  "danger")  # show pop-up alert
         return render_template('home.html',)
-    else:
-            # if GET request, render test request
+    else:  # if GET request, render test request
         return render_template('test_request.html')
-    
 #################################################################################################
 # defines route for test results page
+
+
 @app.route('/test_results/<int:master_id>', methods=['GET', 'POST'])
-def test_results(master_id):
+def test_results(master_id):  # Get the test data entered by user or retrieve with Master_ID
     if request.method == 'POST':
-        # Get the test data entered by user
         unit = request.form['unit']
         nom = request.form['nom']
         actual = request.form['actual']
         tol = request.form['tol']
-
         # Insert the test data into the database
-        cursor.execute('INSERT INTO TEST (Master_ID, Unit, Nom, Actual, Tol) VALUES (?, ?, ?, ?, ?)',
-               (master_id, unit, nom, actual, tol))
-
-        #cursor.execute('INSERT INTO TEST (Master_ID, Unit, Nom, Actual, Tol, LowTol, MaxTol, Error, Pass) '
-        #               'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', (master_id, unit, nom, actual, tol, float(nom) - float(tol),
-        #                                                       float(nom) + float(tol), float(actual) - float(nom), 
-        #                                                       abs(float(actual) - float(nom)) <= float(tol)))
+        cursor.execute('INSERT INTO TEST (Master_ID, unit, nom, actual, tol) VALUES (?, ?, ?, ?, ?)',
+                       (master_id, unit, nom, actual, tol))
         cursor.commit()
-
-    # Retrieve the test results from the database
-
-    cursor.execute('SELECT * FROM TEST WHERE Master_ID = ?', (master_id,))
-    results = cursor.fetchall()
-
-    if results:
-        results = [dict(zip([column[0] for column in cursor.description], row)) for row in results]
-        # if test results exist, render test results page with results and master_id passed as parameters
+        cursor.execute('SELECT * FROM TEST WHERE Master_ID = ?', (master_id,))
+        results = cursor.fetchall()
         return render_template('test_results.html', results=results, master_id=master_id)
-    else:
-        # if test results do not exist, render test results page with message passed as parameter
-        message = 'No test results found for MasterID: ' + str(master_id)
-        return render_template('test_results.html', message=message)
+    else:  # Retrieve the test results from the database
+        cursor.execute('SELECT * FROM TEST WHERE Master_ID = ?', (master_id,))
+        results = cursor.fetchall()
+    if results:  # if test results exist, render test results page with results and master_id passed as parameters
+        results = [dict(zip([column[0] for column in cursor.description], row))
+                   for row in results]
+        return render_template('test_results.html', results=results, master_id=master_id)
+    else:  # if test results do not exist, render test results page with message passed as parameter
+        flash("get test results dont exist", "danger")  # show pop-up alert
+        return render_template('home.html',)
+#################################################################################################

@@ -10,30 +10,22 @@ connection = pyodbc.connect(connection_string)
 cursor = connection.cursor()
 #################################################################################################
 # defines route to send to home page
-
-
 @app.route("/")
 @app.route("/home")
 def home():
     return render_template("home.html")
 #################################################################################################
 # defines route to send to about page
-
-
 @app.route("/about/")
 def about():
     return render_template("about.html")
 #################################################################################################
 # defines route to send to contact page
-
-
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
 #################################################################################################
 # defines route to send to data page
-
-
 @app.route("/data")
 def get_data():
     # execute a SELECT query to get rows from your table
@@ -44,13 +36,11 @@ def get_data():
     data = []
     for row in rows:
         data.append(dict(zip([column[0]
-                    for column in cursor.description], row)))
+        for column in cursor.description], row)))
         # render the template with the data
     return render_template("data.html", data=data)
 #################################################################################################
 # defines route to send to entry page
-
-
 @app.route("/add_entry", methods=["GET", "POST"])
 def add_entry():  # get form data and and create entry if none exist
     if request.method == "POST":
@@ -88,8 +78,6 @@ def add_entry():  # get form data and and create entry if none exist
         return render_template("add_entry.html")
 #################################################################################################
 # defines route to send to test input
-
-
 @app.route('/test_request.html', methods=['GET', 'POST'])
 def test_request():
     if request.method == 'POST':
@@ -104,15 +92,12 @@ def test_request():
             master_id = master_id[0]
             return redirect(url_for('test_results', master_id=master_id))
         else:  # if MasterID does not exist, render home page with error message passed as parameter
-            flash("No test results found for the AN, SN!",
-                  "danger")  # show pop-up alert
+            flash("No test results found!","danger")  # show pop-up alert
         return render_template('home.html',)
     else:  # if GET request, render test request
         return render_template('test_request.html')
 #################################################################################################
 # defines route for test results page
-
-
 @app.route('/test_results/<int:master_id>', methods=['GET', 'POST'])
 def test_results(master_id):  # Get the test data entered by user or retrieve with Master_ID
     if request.method == 'POST':

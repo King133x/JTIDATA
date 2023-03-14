@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Data Search Results
+{% endblock %}
+
+{% block content %}
+<h1>Data Search Results</h1>
+{% if data %}
+<table>
+	<tr>
+		<th>ID</th>
+		<th>AN</th>
+		<th>Model</th>
+		<th>SN</th>
+		<th>NOM</th>
+		<th>LOC</th>
+		<th>CAL DATE</th>
+		<th>DUE</th>
+		<th>CYCLE</th>
+		<th>MANUFACTURE</th>
+		<th>PROC</th>
+		<th>SPECIAL CAL</th>
+		<th>NOTE</th>
+		<th>COST</th>
+		<th>STANDARD</th>
+		<th>Facility</th>
+	</tr>
+	{% for row in data %}
+	<tr>
+		<td>{{ row[0] }}</td>
+		<td>{{ row[1] }}</td>
+		<td>{{ row[2] }}</td>
+		<td>{{ row[3] }}</td>
+		<td>{{ row[4] }}</td>
+		<td>{{ row[5] }}</td>
+		<td>{{ row[6] }}</td>
+		<td>{{ row[7] }}</td>
+		<td>{{ row[8] }}</td>
+		<td>{{ row[9] }}</td>
+		<td>{{ row[10] }}</td>
+		<td>{{ row[11] }}</td>
+		<td>{{ row[12] }}</td>
+		<td>{{ row[13] }}</td>
+		<td>{{ row[14] }}</td>
+		<td>{{ row[15] }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<p>No test results found.</p>
+{% endif %}
+{% endblock %}

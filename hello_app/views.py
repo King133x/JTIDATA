@@ -12,8 +12,6 @@ connection = pyodbc.connect(connection_string)
 cursor = connection.cursor()
 ##################################################################################################################################################################################################
 # create form class
-
-
 class FilterForm(FlaskForm):
     id = StringField('ID')
     AN = StringField('AN')
@@ -32,8 +30,6 @@ class FilterForm(FlaskForm):
     STANDARD = StringField('STANDARD')
     Facility = StringField('Facility')
     submit = SubmitField('Search')
-
-
 class EditRecordForm(FlaskForm):
     AN = StringField('AN')
     Model = StringField('Model')
@@ -53,31 +49,22 @@ class EditRecordForm(FlaskForm):
     submit = SubmitField('Update')
 ##################################################################################################################################################################################################
 # defines route to send to home page
-
-
 @app.route("/")
 @app.route("/home")
 def home():
     return render_template("home.html")
 ##################################################################################################################################################################################################
 # defines route to send to about page
-
-
 @app.route("/about/")
 def about():
     return render_template("about.html")
 ##################################################################################################################################################################################################
 # defines route to send to contact page
-
-
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
-
 ##################################################################################################################################################################################################
 # defines route to send to entry page
-
-
 @app.route("/add_entry", methods=["GET", "POST"])
 def add_entry():  # get form data and and create entry if none exist
     if request.method == "POST":
@@ -121,8 +108,6 @@ def add_entry():  # get form data and and create entry if none exist
                            facility=facility)
 ##################################################################################################################################################################################################
 # defines route to send to test input
-
-
 @app.route('/test_request', methods=['GET', 'POST'])
 def test_request():
     if request.method == 'POST':
@@ -143,8 +128,6 @@ def test_request():
         return render_template('test_request.html')
 ##################################################################################################################################################################################################
 # # defines route for test results page
-
-
 @app.route('/test_results/<int:master_id>', methods=['GET', 'POST'])
 def test_results(master_id):  # Get the test data entered by user or retrieve with Master_ID
     if request.method == 'POST':
@@ -171,8 +154,6 @@ def test_results(master_id):  # Get the test data entered by user or retrieve wi
         return render_template('home.html',)
 ##################################################################################################################################################################################################
 # Define route for data search
-
-
 @app.route('/data_search', methods=['GET', 'POST'])
 def data_search():
     if request.method == 'POST':
@@ -182,8 +163,8 @@ def data_search():
             'SELECT * FROM MASTER WHERE ID = ?', (id))
         data = cursor.fetchone()
         if data:  # if ID exists, render data result page with ID passed as parameter
-            id = id[0]
-            return redirect(url_for('data_results', id=id))
+            data = data[0]
+            return redirect(url_for('data_results', data=data, id=id))
         else:  # if ID does not exist, render home page with error message passed as parameter
             flash("No test results found!", "danger")  # show pop-up alert
             return render_template('home.html',)
@@ -191,34 +172,23 @@ def data_search():
         return render_template("data_search.html")
 ##################################################################################################################################################################################################
 # defines route to send to data page
-
-
 @app.route("/data_results/<int:id>", methods=["GET", "POST"])
 def data_results(id):
     if request.method == 'GET':
         # Execute the SELECT statement to retrieve the data with the given ID
         cursor.execute('SELECT * FROM MASTER WHERE ID = ?', (id,))
         data = cursor.fetchone()
-        if data:
-            # Convert the rows to a list of dictionaries
-            data = [dict(zip([column[0] for column in cursor.description], [str(item) if isinstance(item, datetime.datetime) else item for item in row])) for row in data]
-        # Convert any datetime objects to strings
-        for row in data:
-            for key, value in row.items():
-                if isinstance(value, datetime.datetime):
-                    row[key] = value.strftime('%Y-%m-%d %H:%M:%S')
-        # Render the template with the data
-        return render_template("data_results", data=data)
+
+    if data:  # if data results exist, render data results page with data and id passed as parameters
+        #data = [dict(zip([column[0] for column in cursor.description], row))
+                   #for row in data]
+        return render_template('data_results.html', data=data, id=id)
     else:
         # if test results do not exist, render message
         flash("data results don't exist", "danger")  # show pop-up alert
         return render_template('home.html', )
-
-
 ##################################################################################################################################################################################################
-##################################################################################################################################################################################################
-##################################################################################################################################################################################################
-##################################################################################################################################################################################################
+# run app in debug mode
 if __name__ == '__main__':
     app.run(debug=True)
 ##################################################################################################################################################################################################

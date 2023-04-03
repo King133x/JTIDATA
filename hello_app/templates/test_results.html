@@ -31,7 +31,9 @@
     {% endfor %}
   </tbody>
 </table>
+<hr>
 <h2>Add New Test Results</h2>
+<br/>
 <form action='/test_results/{{ master_id }}' method="post">
   <input type="hidden" name="master_id" value="{{ master_id }}">
   <label for="unit">Unit:</label>

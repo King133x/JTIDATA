@@ -1,53 +1,102 @@
 {% extends "layout.html" %}
-
-{% block title %}
-Data Search Results
-{% endblock %}
-
 {% block content %}
-<h1>Data Search Results</h1>
-{% if data %}
+<h1>Data Results for Master ID: {{ master_id }}</h1>
 <table>
-	<tr>
-		<th>ID</th>
-		<th>AN</th>
-		<th>Model</th>
-		<th>SN</th>
-		<th>NOM</th>
-		<th>LOC</th>
-		<th>CAL DATE</th>
-		<th>DUE</th>
-		<th>CYCLE</th>
-		<th>MANUFACTURE</th>
-		<th>PROC</th>
-		<th>SPECIAL CAL</th>
-		<th>NOTE</th>
-		<th>COST</th>
-		<th>STANDARD</th>
-		<th>Facility</th>
-	</tr>
-	{% for row in data %}
-	<tr>
-		<td>{{ row[0] }}</td>
-		<td>{{ row[1] }}</td>
-		<td>{{ row[2] }}</td>
-		<td>{{ row[3] }}</td>
-		<td>{{ row[4] }}</td>
-		<td>{{ row[5] }}</td>
-		<td>{{ row[6] }}</td>
-		<td>{{ row[7] }}</td>
-		<td>{{ row[8] }}</td>
-		<td>{{ row[9] }}</td>
-		<td>{{ row[10] }}</td>
-		<td>{{ row[11] }}</td>
-		<td>{{ row[12] }}</td>
-		<td>{{ row[13] }}</td>
-		<td>{{ row[14] }}</td>
-		<td>{{ row[15] }}</td>
-	</tr>
-	{% endfor %}
+	<thead>
+		<tr>
+			<th>AN</th>
+			<th>Model</th>
+			<th>SN</th>
+			<th>NOM</th>
+			<th>LOC</th>
+			<th>CAL DATE</th>
+			<th>DUE</th>
+			<th>CYCLE</th>
+			<th>MANUFACTURE</th>
+			<th>PROC</th>
+			<th>SPECIAL CAL</th>
+			<th>NOTE</th>
+			<th>COST</th>
+			<th>STANDARD</th>
+			<th>Facility</th>
+			<th>ID</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in results %}
+		<tr>
+			<td>{{ row['AN'] }}</td>
+			<td>{{ row['Model'] }}</td>
+			<td>{{ row['SN'] }}</td>
+			<td>{{ row['NOM'] }}</td>
+			<td>{{ row['LOC'] }}</td>
+			<td>{{ row['CAL DATE'] }}</td>
+			<td>{{ row['DUE'] }}</td>
+			<td>{{ row['CYCLE'] }}</td>
+			<td>{{ row['MANUFACTURE'] }}</td>
+			<td>{{ row['PROC'] }}</td>
+			<td>{{ row['SPECIAL CAL'] }}</td>
+			<td>{{ row['NOTE'] }}</td>
+			<td>{{ row['COST'] }}</td>
+			<td>{{ row['STANDARD'] }}</td>
+			<td>{{ row['Facility'] }}</td>
+			<td>{{ row['ID'] }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
 </table>
-{% else %}
-<p>No test results found.</p>
-{% endif %}
+<br />
+<h2>Add New Equipment Form</h2>
+<br />
+<form action='/data_results/{{ master_id }}' method="post">
+	<div style="display: flex; flex-wrap: wrap;">
+		<div style="flex: 1; padding-right: 10px;">
+			<label for="an">AN:</label><br>
+			<input type="text" id="an" name="an" required><br>
+			<br />
+			<label for="model">PN:</label><br>
+			<input type="text" id="model" name="model" required><br>
+			<br />
+			<label for="sn">SN:</label><br>
+			<input type="text" id="sn" name="sn" required><br>
+			<br />
+			<label for="nom">NOM:</label><br>
+			<input type="text" id="nom" name="nom" required><br>
+			<br />
+			<label for="location">LOC:</label><br>
+			<input type="text" id="location" name="location" required><br>
+			<br />
+			<label for="cal_date">CAL DATE:</label><br>
+			<input type="date" id="cal_date" name="cal_date"><br>
+			<br />
+			<label for="due">DUE:</label><br>
+			<input type="date" id="due" name="due"><br>
+			<br />
+		</div>
+		<div style="flex: 1; padding-left: 10px;">
+			<label for="manufacture">MAN:</label><br>
+			<input type="text" id="manufacture" name="manufacture" required><br>
+			<br />
+			<label for="procedure">PROC:</label><br>
+			<input type="text" id="procedure" name="procedure" required><br>
+			<br />
+			<label for="cert_note">CERT NOTE/SPECIAL CAL:</label><br>
+			<input type="text" id="cert_note" name="cert_note"><br>
+			<br />
+			<label for="tech_note">TECH NOTE:</label><br>
+			<input type="text" id="tech_note" name="tech_note"><br>
+			<br />
+			<label for="cost">COST:</label><br>
+			<input type="money" id="cost" name="cost"><br>
+			<br />
+			<label for="standard">STANDARD:</label><br>
+			<input type="text" id="standard" name="standard" required><br>
+			<br />
+			<label for="facility">Facility:</label><br>
+			<input type="text" id="facility" name="facility" required><br>
+			<br />
+		</div>
+	</div>
+	<input type="submit" value="Submit">
+</form>
 {% endblock %}

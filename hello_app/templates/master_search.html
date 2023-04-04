@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <head>
     <title>Master Data Search</title>
 </head>
+
 <body>
     <h1>Enter AN & SN</h1>
     <form method="POST">
@@ -13,6 +15,68 @@
         <button type="submit" name="TID_search">Search Test</button>
         <button type="submit" name="MID_search">Search Data</button>
     </form>
+    <h2>Master list</h2>
+    <table id="master-table">
+        <thead>
+            <tr>
+                <th>AN</th>
+                <th>Model</th>
+                <th>SN</th>
+                <th>NOM</th>
+                <th>LOC</th>
+                <th>CAL DATE</th>
+                <th>DUE</th>
+                <th>CYCLE</th>
+                <th>MANUFACTURE</th>
+                <th>PROC</th>
+                <th>SPECIAL CAL</th>
+                <th>NOTE</th>
+                <th>COST</th>
+                <th>STANDARD</th>
+                <th>Facility</th>
+                <th>ID</th>
+            </tr>
+            <tr id="filter-row">
+                <td><input type="text" id="filter-an" placeholder="Filter by AN" /></td>
+                <td><input type="text" id="filter-model" placeholder="Filter by Model" /></td>
+                <td><input type="text" id="filter-sn" placeholder="Filter by SN" /></td>
+                <td><input type="text" id="filter-nom" placeholder="Filter by NOM" /></td>
+                <td><input type="text" id="filter-loc" placeholder="Filter by LOC" /></td>
+                <td><input type="text" id="filter-cal-date" placeholder="Filter by CAL DATE" /></td>
+                <td><input type="text" id="filter-due" placeholder="Filter by DUE" /></td>
+                <td><input type="text" id="filter-cycle" placeholder="Filter by CYCLE" /></td>
+                <td><input type="text" id="filter-manufacture" placeholder="Filter by MANUFACTURE" /></td>
+                <td><input type="text" id="filter-proc" placeholder="Filter by PROC" /></td>
+                <td><input type="text" id="filter-special-cal" placeholder="Filter by SPECIAL CAL" /></td>
+                <td><input type="text" id="filter-note" placeholder="Filter by NOTE" /></td>
+                <td><input type="text" id="filter-cost" placeholder="Filter by COST" /></td>
+                <td><input type="text" id="filter-standard" placeholder="Filter by STANDARD" /></td>
+                <td><input type="text" id="filter-facility" placeholder="Filter by Facility" /></td>
+                <td><input type="text" id="filter-id" placeholder="Filter by ID" /></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in master_results %}
+            <tr>
+                <td><a href="/edit?field=AN&value={{ row['AN'] }}"> {{ row['AN'] }} </a></td>
+                <td><a href="/edit?field=Model&value={{ row['Model'] }}"> {{ row['Model'] }} </a></td>
+                <td><a href="/edit?field=SN&value={{ row['SN'] }}"> {{ row['SN'] }} </a></td>
+                <td><a href="/edit?field=NOM&value={{ row['NOM'] }}"> {{ row['NOM'] }} </a></td>
+                <td><a href="/edit?field=LOC&value={{ row['LOC'] }}"> {{ row['LOC'] }} </a></td>
+                <td><a href="/edit?field=CAL DATE&value={{ row['CAL DATE'] }}"> {{ row['CAL DATE'] }} </a></td>
+                <td><a href="/edit?field=DUE&value={{ row['DUE'] }}"> {{ row['DUE'] }} </a></td>
+                <td><a href="/edit?field=CYCLE&value={{ row['CYCLE'] }}"> {{ row['CYCLE'] }} </a></td>
+                <td><a href="/edit?field=MANUFACTURE&value={{ row['MANUFACTURE'] }}"> {{ row['MANUFACTURE'] }} </a></td>
+                <td><a href="/edit?field=PROC&value={{ row['PROC'] }}"> {{ row['PROC'] }} </a></td>
+                <td><a href="/edit?field=SPECIAL CAL&value={{ row['SPECIAL CAL'] }}"> {{ row['SPECIAL CAL'] }} </a></td>
+                <td><a href="/edit?field=NOTE&value={{ row['NOTE'] }}"> {{ row['NOTE'] }} </a></td>
+                <td><a href="/edit?field=COST&value={{ row['COST'] }}"> {{ row['COST'] }} </a></td>
+                <td><a href="/edit?field=STANDARD&value={{ row['STANDARD'] }}"> {{ row['STANDARD'] }} </a></td>
+                <td><a href="/edit?field=Facility&value={{ row['Facility'] }}"> {{ row['Facility'] }} </a></td>
+                <td><a href="/edit?field=ID&value={{ row['ID'] }}"> {{ row['ID'] }} </a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 {% endblock %}
-

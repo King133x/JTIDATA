@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <!---CSS-->
   <meta charset="utf-8" />
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css') }}" />
@@ -31,6 +32,40 @@
       <p>&copy; 2023</p>
     </footer>
   </div>
+  <!-- filter js -->
+  <script>
+    var searchInputs = document.querySelectorAll('#filter-row input[type="text"]');
+    for (var i = 0; i < searchInputs.length; i++) {
+      searchInputs[i].addEventListener('keyup', filterTable);
+    }
+
+    function filterTable() {
+      var filterValues = {};
+      var tableRows = document.querySelectorAll('table tbody tr');
+
+      for (var i = 0; i < searchInputs.length; i++) {
+        filterValues[searchInputs[i].id.replace('filter-', '')] = searchInputs[i].value.toUpperCase();
+      }
+
+      for (var i = 0; i < tableRows.length; i++) {
+        var rowMatchesFilters = true;
+
+        for (var key in filterValues) {
+          var cellValue = tableRows[i].querySelectorAll('td')[parseInt(key)];
+          if (cellValue && cellValue.textContent.toUpperCase().indexOf(filterValues[key]) === -1) {
+            rowMatchesFilters = false;
+            break;
+          }
+        }
+
+        if (rowMatchesFilters) {
+          tableRows[i].style.display = '';
+        } else {
+          tableRows[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
 </body>
 
 </html>

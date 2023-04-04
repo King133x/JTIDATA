@@ -25,22 +25,22 @@
 	<tbody>
 		{% for row in results %}
 		<tr>
-			<td>{{ row['AN'] }}</td>
-			<td>{{ row['Model'] }}</td>
-			<td>{{ row['SN'] }}</td>
-			<td>{{ row['NOM'] }}</td>
-			<td>{{ row['LOC'] }}</td>
-			<td>{{ row['CAL DATE'] }}</td>
-			<td>{{ row['DUE'] }}</td>
-			<td>{{ row['CYCLE'] }}</td>
-			<td>{{ row['MANUFACTURE'] }}</td>
-			<td>{{ row['PROC'] }}</td>
-			<td>{{ row['SPECIAL CAL'] }}</td>
-			<td>{{ row['NOTE'] }}</td>
-			<td>{{ row['COST'] }}</td>
-			<td>{{ row['STANDARD'] }}</td>
-			<td>{{ row['Facility'] }}</td>
-			<td>{{ row['ID'] }}</td>
+			<td><a href="/edit?field=AN&value={{ row['AN'] }}"> {{ row['AN'] }} </a></td>
+			<td><a href="/edit?field=Model&value={{ row['Model'] }}"> {{ row['Model'] }} </a></td>
+			<td><a href="/edit?field=SN&value={{ row['SN'] }}"> {{ row['SN'] }} </a></td>
+			<td><a href="/edit?field=NOM&value={{ row['NOM'] }}"> {{ row['NOM'] }} </a></td>
+			<td><a href="/edit?field=LOC&value={{ row['LOC'] }}"> {{ row['LOC'] }} </a></td>
+			<td><a href="/edit?field=CAL DATE&value={{ row['CAL DATE'] }}"> {{ row['CAL DATE'] }} </a></td>
+			<td><a href="/edit?field=DUE&value={{ row['DUE'] }}"> {{ row['DUE'] }} </a></td>
+			<td><a href="/edit?field=CYCLE&value={{ row['CYCLE'] }}"> {{ row['CYCLE'] }} </a></td>
+			<td><a href="/edit?field=MANUFACTURE&value={{ row['MANUFACTURE'] }}"> {{ row['MANUFACTURE'] }} </a></td>
+			<td><a href="/edit?field=PROC&value={{ row['PROC'] }}"> {{ row['PROC'] }} </a></td>
+			<td><a href="/edit?field=SPECIAL CAL&value={{ row['SPECIAL CAL'] }}"> {{ row['SPECIAL CAL'] }} </a></td>
+			<td><a href="/edit?field=NOTE&value={{ row['NOTE'] }}"> {{ row['NOTE'] }} </a></td>
+			<td><a href="/edit?field=COST&value={{ row['COST'] }}"> {{ row['COST'] }} </a></td>
+			<td><a href="/edit?field=STANDARD&value={{ row['STANDARD'] }}"> {{ row['STANDARD'] }} </a></td>
+			<td><a href="/edit?field=Facility&value={{ row['Facility'] }}"> {{ row['Facility'] }} </a></td>
+			<td><a href="/edit?field=ID&value={{ row['ID'] }}"> {{ row['ID'] }} </a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

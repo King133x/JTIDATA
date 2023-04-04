@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+<html>
+  <head>
+    <title>Edit</title>
+  </head>
+  <body>
+    <h1>Edit {{ field }}</h1>
+    <form method="post">
+      <label for="new_value">New Value:</label>
+      <input type="text" id="new_value" name="new_value" value="{{ value }}" required>
+      <input type="hidden" id="field" name="field" value="{{ field }}">
+      <button type="submit">Save</button>
+      <button type="button" onclick="window.history.back()">Cancel</button>
+    </form>
+  </body>
+</html>
+{% endblock %}

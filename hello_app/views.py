@@ -56,7 +56,9 @@ def master_search():
                 flash("No Equipment found!", "danger")  # show pop-up alert
                 return render_template('home.html',)
     else:  # if GET request, render master search form
-        return render_template('master_search.html')
+        cursor.execute('SELECT * FROM MASTER')
+        master_results = cursor.fetchall()
+        return render_template('master_search.html',master_results=master_results)
 ##################################################################################################################################################################################################
 # defines route for test results page
 @app.route('/test_results/<int:master_id>', methods=['GET', 'POST'])
@@ -126,6 +128,23 @@ def data_results(master_id): # add the data entered by user or retrieve with Mas
             flash("No data results found!", "danger")
             return redirect(url_for("home"))
 ##################################################################################################################################################################################################
+@app.route('/edit', methods=['GET', 'POST'])
+def edit():
+    if request.method == 'GET':
+        # Extract the field name and value from the query parameters
+        field = request.args.get('field')
+        value = request.args.get('value')
+        
+        # Render a form with the current value of the field
+        return render_template('edit.html', field=field, value=value)
+    
+    elif request.method == 'POST':
+        # Extract the field name and new value from the form submission
+        field = request.form.get('field')
+        new_value = request.form.get('new_value')
+        cursor.execute("UPDATE MASTER SET {field} = ? WHERE id = ?", (new_value, id))
+        connection.commit()
+        return redirect(request.referrer)
 ##################################################################################################################################################################################################
 # run app in debug mode
 if __name__ == '__main__':

@@ -6,13 +6,10 @@
 </head>
 
 <body>
-    <h1>Enter AN & SN</h1>
+    <h1>Enter Equipment ID</h1>
     <form method="POST">
-        <label for="an">AN:</label>
-        <input type="text" id="an" name="an" required><br><br>
-        <label for="sn">SN:</label>
-        <input type="text" id="sn" name="sn" required><br><br>
-        <button type="submit" name="TID_search">Search Test</button>
+        <label for="ID">MID:</label>
+        <input type="text" id="master_id" name="master_id" required><br><br>
         <button type="submit" name="MID_search">Search Data</button>
     </form>
     <h2>Master list</h2>
@@ -36,28 +33,11 @@
                 <th>Facility</th>
                 <th>ID</th>
             </tr>
-            <tr id="filter-row">
-                <td><input type="text" id="filter-an" placeholder="Filter by AN" /></td>
-                <td><input type="text" id="filter-model" placeholder="Filter by Model" /></td>
-                <td><input type="text" id="filter-sn" placeholder="Filter by SN" /></td>
-                <td><input type="text" id="filter-nom" placeholder="Filter by NOM" /></td>
-                <td><input type="text" id="filter-loc" placeholder="Filter by LOC" /></td>
-                <td><input type="text" id="filter-cal-date" placeholder="Filter by CAL DATE" /></td>
-                <td><input type="text" id="filter-due" placeholder="Filter by DUE" /></td>
-                <td><input type="text" id="filter-cycle" placeholder="Filter by CYCLE" /></td>
-                <td><input type="text" id="filter-manufacture" placeholder="Filter by MANUFACTURE" /></td>
-                <td><input type="text" id="filter-proc" placeholder="Filter by PROC" /></td>
-                <td><input type="text" id="filter-special-cal" placeholder="Filter by SPECIAL CAL" /></td>
-                <td><input type="text" id="filter-note" placeholder="Filter by NOTE" /></td>
-                <td><input type="text" id="filter-cost" placeholder="Filter by COST" /></td>
-                <td><input type="text" id="filter-standard" placeholder="Filter by STANDARD" /></td>
-                <td><input type="text" id="filter-facility" placeholder="Filter by Facility" /></td>
-                <td><input type="text" id="filter-id" placeholder="Filter by ID" /></td>
-            </tr>
         </thead>
         <tbody>
-            {% for row in master_results %}
+            {% for row in master_search %}
             <tr>
+                <td><a href="/master_results/{{ row['ID'] }}"> {{ row['ID'] }} </a></td>
                 <td><a href="/edit?field=AN&value={{ row['AN'] }}"> {{ row['AN'] }} </a></td>
                 <td><a href="/edit?field=Model&value={{ row['Model'] }}"> {{ row['Model'] }} </a></td>
                 <td><a href="/edit?field=SN&value={{ row['SN'] }}"> {{ row['SN'] }} </a></td>
@@ -73,7 +53,6 @@
                 <td><a href="/edit?field=COST&value={{ row['COST'] }}"> {{ row['COST'] }} </a></td>
                 <td><a href="/edit?field=STANDARD&value={{ row['STANDARD'] }}"> {{ row['STANDARD'] }} </a></td>
                 <td><a href="/edit?field=Facility&value={{ row['Facility'] }}"> {{ row['Facility'] }} </a></td>
-                <td><a href="/edit?field=ID&value={{ row['ID'] }}"> {{ row['ID'] }} </a></td>
             </tr>
             {% endfor %}
         </tbody>

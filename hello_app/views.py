@@ -73,6 +73,27 @@ def master_results(master_id):
             flash("No master results found!", "danger")
             return redirect(url_for("home"))
 ##################################################################################################################################################################################################
+@app.route('/master_edit/<int:master_id>', methods=['GET', 'POST'])
+def master_edit(master_id,):
+    field = request.form['field']
+    if request.method == 'GET':
+        # Fetch the current value of the field from the database
+        cursor.execute("SELECT {} FROM MASTER WHERE id = ?".format(field), (master_id,))
+        value = cursor.fetchone()[0]
+        
+        # Render a form with the current value of the field
+        return render_template('master_edit.html', field=field, value=value)
+
+    elif request.method == 'POST':
+        # Extract the new value of the field from the form submission
+        new_value = request.form.get('new_value')
+        
+        # Update the field in the database
+        cursor.execute("UPDATE MASTER SET {} = ? WHERE id = ?".format(field), (new_value, master_id))
+        connection.commit()
+        
+        # Redirect back to the previous page
+        return redirect(request.referrer)
 
 ##################################################################################################################################################################################################
 # run app in debug mode

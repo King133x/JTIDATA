@@ -28,10 +28,12 @@
 				<th>STANDARD</th>
 				<th>Facility</th>
 			</tr>
+			{% endif %}
 		</thead>
 		<tbody>
 			{% for result in master_results %}
 			<tr>
+				<td><a href="/master_edit/{{ result['ID'] }}"> {{ result['ID'] }} </a></td>
 				<td>{{ result['AN'] }}</td>
 				<td>{{ result['Model'] }}</td>
 				<td>{{ result['SN'] }}</td>
@@ -51,8 +53,6 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	{% endif %}
-
 	{% if test_results %}
 	<table>
 		<thead>
@@ -85,6 +85,7 @@
 		</tbody>
 	</table>
 	{% endif %}
+	<br />
 	<h2>Add New Test Results</h2>
 	<br />
 	<form action='/master_results/{{ master_id }}' method="post">

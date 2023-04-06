@@ -45,52 +45,35 @@ def master_search():
         return render_template('master_search.html', master_search=master_search)
 ##################################################################################################################################################################################################
 @app.route('/master_results/<int:master_id>', methods=['GET', 'POST'])
-def master_results(master_id):  # add the data entered by user or retrieve with Master_ID
+def master_results(master_id):
     if request.method == "POST":
-        flash("No master POST!", "danger")
-        return redirect(url_for("home"))
-    else:  # request method is GET Retrieve the data results from the database
-        cursor.execute('SELECT * FROM MASTER WHERE ID = ?', (master_id,))
-        master_results = cursor.fetchall()
-        if master_results:  # if data results exist
-            master_results = [
-                dict(zip([column[0] for column in cursor.description], row)) for row in master_results]
-            cursor.execute(
-                'SELECT * FROM TEST WHERE Master_ID = ?', (master_id,))
-            results = cursor.fetchall()
-            if results:  # if test results exist, render test results page with results and master_id passed as parameters
-                results = [dict(zip([column[0] for column in cursor.description], row))
-                           for row in results]
-            else:  # if test results do not exist, render message passed as parameter
-                flash("test results dont exist", "danger")  # show pop-up alert
-            return render_template('data_results.html', master_results=master_results, master_id=master_id,results=results)
-        else:  # if data results do not exist
-            flash("No data results found!", "danger")
-            return redirect(url_for("home"))
-##################################################################################################################################################################################################
-# defines route for test results page
-@app.route('/test_results/<int:master_id>', methods=['GET', 'POST'])
-def test_results(master_id):  # add the test data entered by user or retrieve with Master_ID
-    if request.method == 'POST':
         unit = request.form['unit']
         nom = request.form['nom']
         actual = request.form['actual']
         tol = request.form['tol']
-        # Insert the test data into the database
         cursor.execute('INSERT INTO TEST (Master_ID, unit, nom, actual, tol) VALUES (?, ?, ?, ?, ?)',
                        (master_id, unit, nom, actual, tol))
         cursor.commit()
-        return redirect(url_for('master_results', master_id=master_id,))
-    else:  # Retrieve the test results from the database
-        cursor.execute('SELECT * FROM TEST WHERE Master_ID = ?', (master_id,))
-        results = cursor.fetchall()
-    if results:  # if test results exist, render test results page with results and master_id passed as parameters
-        results = [dict(zip([column[0] for column in cursor.description], row))
-                   for row in results]
-        return render_template('test_results.html', results=results, master_id=master_id)
-    else:  # if test results do not exist, render home results page with message passed as parameter
-        flash("test results dont exist", "danger")  # show pop-up alert
-        return render_template('home.html',)
+        flash("Test results added successfully!", "success")
+        return redirect(url_for("master_results", master_id=master_id))
+    else:
+        cursor.execute('SELECT * FROM MASTER WHERE ID = ?', (master_id,))
+        master_results = cursor.fetchall()
+        if master_results: # show master results
+            master_results = [dict(zip([column[0] for column in cursor.description], row)) for row in master_results]
+            cursor.execute('SELECT * FROM TEST WHERE Master_ID = ?', (master_id,))
+            test_results = cursor.fetchall()
+            if test_results: # include test report if found
+                test_results = [dict(zip([column[0] for column in cursor.description], row))
+                           for row in test_results]
+            else:
+                flash("No test results found!", "danger")
+            return render_template('master_results.html', master_results=master_results, master_id=master_id, test_results=test_results)
+        else:
+            flash("No master results found!", "danger")
+            return redirect(url_for("home"))
+##################################################################################################################################################################################################
+
 ##################################################################################################################################################################################################
 # run app in debug mode
 if __name__ == '__main__':

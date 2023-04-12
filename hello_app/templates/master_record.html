@@ -12,6 +12,7 @@
 	<table>
 		<thead>
 			<tr>
+				<th>EDIT</th>
 				<th>AN</th>
 				<th>Model</th>
 				<th>SN</th>
@@ -84,20 +85,18 @@
 			{% endfor %}
 		</tbody>
 	</table>
+	<br/>
+<form action='/master_record/{{ master_id }}' method="post">
+  <input type="hidden" name="master_id" value="{{ master_id }}">
+  <label for="unit">Unit:</label>
+  <input type="text" name="unit" id="unit" required>
+  <label for="nom">Nominal:</label>
+  <input type="number" name="nom" id="nom" step="0.000000000001" required>
+  <label for="actual">Actual:</label>
+  <input type="number" name="actual" id="actual" step="0.000000000001" required>
+  <label for="tol">Tolerance:</label>
+  <input type="number" name="tol" id="tol" step="0.000000000001" required>
+  <button type="submit">Add Test Result</button>
+</form>
 	{% endif %}
-	<br />
-	<h2>Add New Test Results</h2>
-	<br />
-	<form action='/master_results/{{ master_id }}' method="post">
-		<input type="hidden" name="master_id" value="{{ master_id }}">
-		<label for="unit">Unit:</label>
-		<input type="text" name="unit" id="unit" required>
-		<label for="nom">Nominal:</label>
-		<input type="number" name="nom" id="nom" step="0.000000000001" required>
-		<label for="actual">Actual:</label>
-		<input type="number" name="actual" id="actual" step="0.000000000001" required>
-		<label for="tol">Tolerance:</label>
-		<input type="number" name="tol" id="tol" step="0.000000000001" required>
-		<button type="submit">Add Test Result</button>
-	</form>
 	{% endblock %}

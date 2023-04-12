@@ -3,59 +3,105 @@
 
 <head>
     <title>Master Data Search</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <style>
+        .container {
+            width: 100%;
+            max-width: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#master-table').DataTable({
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: -1
+                    }
+                },
+                columnDefs: [
+                    {
+                        className: 'control',
+                        orderable: true,
+                        targets: -1
+                    },
+                    {
+                        responsivePriority: 1,
+                        targets: [0, 1, 2, 3, 4]
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+                    },
+                    {
+                        width: '100px', // Set the fixed width for all columns
+                        targets: '_all'
+                    }
+                ],
+
+                ajax: {
+                    url: "{{ url_for('master_data') }}",
+                    type: "POST",
+                    processing: true,
+                    serverSide: true
+                },
+                columns: [
+                    {
+                        "data": "ID", "render": function (data, type, row, meta) {
+                            return '<a href="/master_record/' + data + '">Record</a>';
+                        }
+                    },
+                    { "data": "AN" },
+                    { "data": "Model" },
+                    { "data": "SN" },
+                    { "data": "NOM" },
+                    { "data": "LOC" },
+                    { "data": "Facility" },
+                    { "data": "MANUFACTURE" },
+                    { "data": "COST" },
+                    { "data": "STANDARD" },
+                    { "data": "CYCLE" },
+                    { "data": "PROC" },
+                    { "data": "CAL DATE" },
+                    { "data": "NOTE" },
+                    { "data": "SPECIAL CAL" },
+                    { "data": "DUE" }
+                ]
+            });
+        });
+
+    </script>
 </head>
 
 <body>
-    <h1>Enter Equipment ID</h1>
-    <form method="POST">
-        <label for="ID">MID:</label>
-        <input type="text" id="master_id" name="master_id" required><br><br>
-        <button type="submit" name="MID_search">Search Data</button>
-    </form>
-    <h2>Master list</h2>
-    <table id="master-table">
+    <br><br>
+    <h2>Master list </h2>
+    <table id="master-table" class="display nowrap" style="width:100%">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>AN</th>
                 <th>Model</th>
                 <th>SN</th>
                 <th>NOM</th>
                 <th>LOC</th>
-                <th>CAL DATE</th>
-                <th>DUE</th>
-                <th>CYCLE</th>
+                <th>FACILITY</th>
                 <th>MANUFACTURE</th>
-                <th>PROC</th>
-                <th>SPECIAL CAL</th>
-                <th>NOTE</th>
                 <th>COST</th>
                 <th>STANDARD</th>
-                <th>Facility</th>
-                <th>ID</th>
+                <th>CYCLE</th>
+                <th>PROC</th>
+                <th>CAL DATE</th>
+                <th>NOTE</th>
+                <th>SPECIAL CAL</th>
+                <th>DUE</th>
             </tr>
         </thead>
-        <tbody>
-            {% for row in master_search %}
-            <tr>
-                <td><a href="/master_results/{{ row['ID'] }}"> {{ row['ID'] }} </a></td>
-                <td>{{ row['AN'] }}</td>
-                <td>{{ row['Model'] }}</td>
-                <td>{{ row['SN'] }}</td>
-                <td>{{ row['NOM'] }}</td>
-                <td>{{ row['LOC'] }}</td>
-                <td>{{ row['CAL DATE'] }}</td>
-                <td>{{ row['DUE'] }}</td>
-                <td>{{ row['CYCLE'] }}</td>
-                <td>{{ row['MANUFACTURE'] }}</td>
-                <td>{{ row['PROC'] }}</td>
-                <td>{{ row['SPECIAL CAL'] }}</td>
-                <td>{{ row['NOTE'] }}</td>
-                <td>{{ row['COST'] }}</td>
-                <td>{{ row['STANDARD'] }}</td>
-                <td>{{ row['Facility'] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
     </table>
 </body>
 {% endblock %}

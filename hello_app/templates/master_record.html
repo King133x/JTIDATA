@@ -8,8 +8,9 @@
 <body>
 	<h1>Data Results</h1>
 	<p>Master ID: {{ master_id }}</p>
+	<!-- Show Master record -->
 	{% if master_results %}
-	<table>
+	<table id="master_table">
 		<thead>
 			<tr>
 				<th>EDIT</th>
@@ -29,7 +30,7 @@
 				<th>STANDARD</th>
 				<th>Facility</th>
 			</tr>
-			{% endif %}
+
 		</thead>
 		<tbody>
 			{% for result in master_results %}
@@ -54,8 +55,11 @@
 			{% endfor %}
 		</tbody>
 	</table>
+	{% endif %}
+	<br />
+	<!-- Show Test record -->
 	{% if test_results %}
-	<table>
+	<table id="test_table">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -85,18 +89,19 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	<br/>
-<form action='/master_record/{{ master_id }}' method="post">
-  <input type="hidden" name="master_id" value="{{ master_id }}">
-  <label for="unit">Unit:</label>
-  <input type="text" name="unit" id="unit" required>
-  <label for="nom">Nominal:</label>
-  <input type="number" name="nom" id="nom" step="0.000000000001" required>
-  <label for="actual">Actual:</label>
-  <input type="number" name="actual" id="actual" step="0.000000000001" required>
-  <label for="tol">Tolerance:</label>
-  <input type="number" name="tol" id="tol" step="0.000000000001" required>
-  <button type="submit">Add Test Result</button>
-</form>
 	{% endif %}
+	<br />
+	<!-- Add new test form  -->
+	<form action='/master_record/{{ master_id }}' method="post">
+		<input type="hidden" name="master_id" value="{{ master_id }}">
+		<label for="unit">Unit:</label>
+		<input type="text" name="unit" id="unit" required>
+		<label for="nom">Nominal:</label>
+		<input type="number" name="nom" id="nom" step="0.000000000001" required>
+		<label for="actual">Actual:</label>
+		<input type="number" name="actual" id="actual" step="0.000000000001" required>
+		<label for="tol">Tolerance:</label>
+		<input type="number" name="tol" id="tol" step="0.000000000001" required>
+		<button type="submit">Add Test Result</button>
+	</form>
 	{% endblock %}

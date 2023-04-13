@@ -3,6 +3,37 @@
 
 <head>
 	<title>Data Results</title>
+	<script>
+		$(document).ready(function () {
+			$("#edit").click(function () {
+				// Toggle edit mode for master record cells
+				$(".editable").attr('contenteditable', function (_, value) {
+					return value == 'false';
+				});
+			});
+
+			$("#save").click(function () {
+				// Collect updated data
+				let updatedData = {
+					ID: $("#master_table .editable.ID").text(),
+					AN: $("#master_table .editable.AN").text(),
+					Model: $("#master_table .editable.Model").text(),
+					// Add more fields as necessary
+				};
+
+				// Send AJAX request to update master record
+				$.ajax({
+					url: "/master_record/" + updatedData.ID,
+					type: "PUT",
+					data: JSON.stringify(updatedData),
+					contentType: "application/json",
+					success: function (response) {
+						alert(response.message);
+					}
+				});
+			});
+		});
+	</script>
 </head>
 
 <body>
@@ -10,6 +41,8 @@
 	<p>Master ID: {{ master_id }}</p>
 	<!-- Show Master record -->
 	{% if master_results %}
+	<button id="edit">Edit</button>
+	<button id="save">Save</button>
 	<table id="master_table">
 		<thead>
 			<tr>
@@ -35,7 +68,7 @@
 		<tbody>
 			{% for result in master_results %}
 			<tr>
-				<td><a href="/master_edit/{{ result['ID'] }}"> {{ result['ID'] }} </a></td>
+				<td>{{ result['ID'] }}</td>
 				<td>{{ result['AN'] }}</td>
 				<td>{{ result['Model'] }}</td>
 				<td>{{ result['SN'] }}</td>
@@ -104,4 +137,5 @@
 		<input type="number" name="tol" id="tol" step="0.000000000001" required>
 		<button type="submit">Add Test Result</button>
 	</form>
-	{% endblock %}
+</body>
+{% endblock %}

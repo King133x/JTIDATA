@@ -61,7 +61,7 @@ def about():
 def contact():
     return render_template("contact.html")
 ##################################################################################################################################################################################################
-# handles the data search ajax uses post to get data
+# handles the data search ajax uses post to get data else sends to search page
 
 
 @app.route('/master_data/', methods=['GET', 'POST'])
@@ -79,10 +79,10 @@ def master_data():
 ##################################################################################################################################################################################################
 # looks up the master and test table
 
-
-@app.route('/master_record/<int:master_id>', methods=['GET', 'POST'])
+@app.route('/master_record/<int:master_id>', methods=['GET', 'POST', 'PUT'])
 def master_record(master_id):
     if request.method == "POST":
+        # Add new test record
         unit = request.form['unit']
         nom = request.form['nom']
         actual = request.form['actual']
@@ -91,6 +91,29 @@ def master_record(master_id):
                        (master_id, unit, nom, actual, tol))
         cursor.commit()
         flash("Test results added successfully!", "success")
+        return redirect(url_for("master_record", master_id=master_id))
+    elif request.method == "PUT":
+        # Update master record
+        data = request.get_json()
+        an = data['an']
+        model = data['model']
+        sn = data['sn']
+        nom = data['nom']
+        loc = data['loc']
+        cal_date = data['cal_date']
+        due = data['due']
+        cycle = data['cycle']
+        manufacture = data['manufacture']
+        proc = data['proc']
+        special_cal = data['special_cal']
+        note = data['note']
+        cost = data['cost']
+        standard = data['standard']
+        facility = data['facility']
+        cursor.execute('UPDATE MASTER SET AN = ?, Model = ?, SN = ?, NOM = ?, LOC = ?, [CAL DATE] = ?, DUE = ?, CYCLE = ?, MANUFACTURE = ?, PROC = ?, [SPECIAL CAL] = ?, NOTE = ?, COST = ?, STANDARD = ?, Facility = ? WHERE ID = ?',
+                       (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, master_id))
+        cursor.commit()
+        flash("Master record updated successfully!", "success")
         return redirect(url_for("master_record", master_id=master_id))
     else:
         if 'json' in request.args:

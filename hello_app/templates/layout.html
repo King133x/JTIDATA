@@ -6,7 +6,18 @@
   <meta charset="utf-8" />
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css') }}" />
-
+  <!-- DataTables Editor CSS -->
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/v/dt/dt-1.11.5/editor-2.0.6/datatables.min.css" />
+  <!-- DataTables Editor JS -->
+  <script type="text/javascript"
+    src="https://cdn.datatables.net/v/dt/dt-1.11.5/editor-2.0.6/datatables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 </head>
 
 <body>
@@ -33,40 +44,6 @@
       <p>&copy; 2023</p>
     </footer>
   </div>
-  <!-- filter js -->
-  <script>
-    var searchInputs = document.querySelectorAll('#filter-row input[type="text"]');
-    for (var i = 0; i < searchInputs.length; i++) {
-      searchInputs[i].addEventListener('keyup', filterTable);
-    }
-
-    function filterTable() {
-      var filterValues = {};
-      var tableRows = document.querySelectorAll('table tbody tr');
-
-      for (var i = 0; i < searchInputs.length; i++) {
-        filterValues[searchInputs[i].id.replace('filter-', '')] = searchInputs[i].value.toUpperCase();
-      }
-
-      for (var i = 0; i < tableRows.length; i++) {
-        var rowMatchesFilters = true;
-
-        for (var key in filterValues) {
-          var cellValue = tableRows[i].querySelectorAll('td')[parseInt(key)];
-          if (cellValue && cellValue.textContent.toUpperCase().indexOf(filterValues[key]) === -1) {
-            rowMatchesFilters = false;
-            break;
-          }
-        }
-
-        if (rowMatchesFilters) {
-          tableRows[i].style.display = '';
-        } else {
-          tableRows[i].style.display = 'none';
-        }
-      }
-    }
-  </script>
 </body>
 
 </html>

@@ -21,11 +21,19 @@
 </head>
 
 <body>
-  <div class="navbar">
-    <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
-    <a href="{{ url_for('about') }}" class="navbar-item">About</a>
-    <a href="{{ url_for('contact') }}" class="navbar-item">Contact</a>
-    <a href="{{ url_for('master_data') }}" class="navbar-item">MANAGE</a>
+  <header class="header">
+    <nav class="header__nav">
+      <a href="{{ url_for('home') }}" class="header__link navbar-brand">Home</a>
+      <a href="{{ url_for('master_data') }}" class="header__link navbar-item">Manage</a>
+    </nav>
+    <section class="header__logo-display">
+      <img class="header__logo-img" src="/static/images/johanson-technology-logo.png" >
+      <img class="header__logo-img" src="/static/images/johanson-dielectrics-logo.png"> 
+    </section>
+  </header>
+    
+      
+   
   </div>
   <div class="body-content">
     {% block content %}

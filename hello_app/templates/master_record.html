@@ -3,37 +3,6 @@
 
 <head>
 	<title>Data Results</title>
-	<script>
-		$(document).ready(function () {
-			$("#edit").click(function () {
-				// Toggle edit mode for master record cells
-				$(".editable").attr('contenteditable', function (_, value) {
-					return value == 'false';
-				});
-			});
-
-			$("#save").click(function () {
-				// Collect updated data
-				let updatedData = {
-					ID: $("#master_table .editable.ID").text(),
-					AN: $("#master_table .editable.AN").text(),
-					Model: $("#master_table .editable.Model").text(),
-					// Add more fields as necessary
-				};
-
-				// Send AJAX request to update master record
-				$.ajax({
-					url: "/master_record/" + updatedData.ID,
-					type: "PUT",
-					data: JSON.stringify(updatedData),
-					contentType: "application/json",
-					success: function (response) {
-						alert(response.message);
-					}
-				});
-			});
-		});
-	</script>
 </head>
 
 <body>
@@ -41,12 +10,10 @@
 	<p>Master ID: {{ master_id }}</p>
 	<!-- Show Master record -->
 	{% if master_results %}
-	<button id="edit">Edit</button>
-	<button id="save">Save</button>
 	<table id="master_table">
 		<thead>
 			<tr>
-				<th>EDIT</th>
+				<th>ID</th>
 				<th>AN</th>
 				<th>Model</th>
 				<th>SN</th>
@@ -95,7 +62,6 @@
 	<table id="test_table">
 		<thead>
 			<tr>
-				<th>ID</th>
 				<th>UNIT</th>
 				<th>NOM</th>
 				<th>ACTUAL</th>
@@ -104,12 +70,15 @@
 				<th>MAXTOL</th>
 				<th>ERROR</th>
 				<th>PASS</th>
+				<th>TEMP</th>
+				<th>HUMIDITY</th>
+				<th>TECH</th>
+				<th>CAL_DATE</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for row in test_results %}
 			<tr>
-				<td>{{ row['ID'] }}</td>
 				<td>{{ row['UNIT'] }}</td>
 				<td>{{ row['NOM'] }}</td>
 				<td>{{ row['ACTUAL'] }}</td>
@@ -118,6 +87,10 @@
 				<td>{{ row['MAXTOL'] }}</td>
 				<td>{{ row['ERROR'] }}</td>
 				<td>{{ row['PASS'] }}</td>
+				<td>{{ row['temp'] }}</td>
+				<td>{{ row['humidity'] }}</td>
+				<td>{{ row['tech'] }}</td>
+				<td>{{ row['cal_date'] }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -135,6 +108,12 @@
 		<input type="number" name="actual" id="actual" step="0.000000000001" required>
 		<label for="tol">Tolerance:</label>
 		<input type="number" name="tol" id="tol" step="0.000000000001" required>
+		<label for="temp">Temp:</label>
+		<input type="number" name="temp" id="temp" step="0.1" required>
+		<label for="humidity">Humidity:</label>
+		<input type="number" name="humidity" id="humidity" step="0.1" required>
+		<label for="tech">Tech:</label>
+		<input type="text" name="tech" id="tech" required>
 		<button type="submit">Add Test Result</button>
 	</form>
 </body>

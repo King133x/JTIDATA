@@ -15,55 +15,13 @@ cursor = connection.cursor()
 def query_to_dict(query_results):
     return [dict(zip([column[0] for column in cursor.description], row)) for row in query_results]
 ##################################################################################################################################################################################################
-# Azure Storage account details
-STORAGE_ACCOUNT_NAME = "<storage-account-name>"
-STORAGE_ACCOUNT_KEY = "<storage-account-key>"
-CONTAINER_NAME = "<container-name>"
-# Create a BlobServiceClient object
-# blob_service_client = BlobServiceClient.from_connection_string(
-#     f"DefaultEndpointsProtocol=https;AccountName={STORAGE_ACCOUNT_NAME};AccountKey={STORAGE_ACCOUNT_KEY};EndpointSuffix=core.windows.net")
-##################################################################################################################################################################################################
-
-##################################################################################################################################################################################################
-# defines route to send to home page ********handles erros in flash********
-
-
+# defines route to send to home page
 @app.route("/")
 @app.route("/home")
 def home():
     return render_template("home.html")
-    # def get_image(filename):
-    #     try:
-    #         # Get a BlobClient object for the image file
-    #         blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME, blob=filename)
-
-    #         # Download the image data
-    #         image_data = blob_client.download_blob().content_as_bytes()
-
-    #         # Create a Flask response with the image data and return it
-    #         return Response(image_data, mimetype='image/jpeg')
-
-    #     except Exception as e:
-    #         print(e)
-    #         return Response(status=404)
-##################################################################################################################################################################################################
-# defines route to send to about page ********need to add scope of cal (maybe table in SQl and check within range)********
-
-
-@app.route("/about/")
-def about():
-    return render_template("about.html")
-##################################################################################################################################################################################################
-# defines route to send to contact page ********need to add some basic contact********
-
-
-@app.route("/contact/")
-def contact():
-    return render_template("contact.html")
 ##################################################################################################################################################################################################
 # handles the data search ajax uses post to get data else sends to search page
-
-
 @app.route('/master_data/', methods=['GET', 'POST'])
 def master_data():
     if request.method == 'POST':
@@ -75,9 +33,12 @@ def master_data():
             flash("No equipment found with this MID!", "danger")
             return redirect(url_for('home'))
     else:
-        return render_template('master_search.html')
+        cursor.execute('SELECT * FROM overdue_table')
+        overdue_table = query_to_dict(cursor.fetchall())
+        return render_template('master_search.html',overdue_table=overdue_table)
 ##################################################################################################################################################################################################
 # looks up the master and test table
+
 
 @app.route('/master_record/<int:master_id>', methods=['GET', 'POST', 'PUT'])
 def master_record(master_id):
@@ -87,8 +48,11 @@ def master_record(master_id):
         nom = request.form['nom']
         actual = request.form['actual']
         tol = request.form['tol']
-        cursor.execute('INSERT INTO TEST (Master_ID, unit, nom, actual, tol) VALUES (?, ?, ?, ?, ?)',
-                       (master_id, unit, nom, actual, tol))
+        temp = request.form['temp']
+        humidity = request.form['humidity']
+        tech = request.form['tech']
+        cursor.execute('INSERT INTO TEST (Master_ID, unit, nom, actual, tol, temp, humidity, tech) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                       (master_id, unit, nom, actual, tol, temp, humidity, tech))
         cursor.commit()
         flash("Test results added successfully!", "success")
         return redirect(url_for("master_record", master_id=master_id))
@@ -140,6 +104,7 @@ def master_record(master_id):
 ##################################################################################################################################################################################################
 
 ##################################################################################################################################################################################################
+
 
 ##################################################################################################################################################################################################
 # run app in debug mode

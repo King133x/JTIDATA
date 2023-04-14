@@ -88,5 +88,27 @@
             </tr>
         </thead>
     </table>
+    {% if overdue_table %}
+    <h2>OVERDUE list </h2>
+	<table id="overdue_table">
+		<thead>
+			<tr>
+				<th>MID</th>
+				<th>DATE</th>
+				<th>NOM</th>
+			</tr>
+
+		</thead>
+		<tbody>
+			{% for result in overdue_table %}
+			<tr>
+				<td><a href="{{ url_for('master_record', master_id=result['master_id']) }}">{{ result['master_id'] }}</a></td>
+				<td>{{ result['due_date'] }}</td>
+				<td>{{ result['NOM'] }}</td>
+				
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
 </body>
 {% endblock %}

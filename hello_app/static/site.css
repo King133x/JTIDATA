@@ -167,11 +167,7 @@ th {
 
 .navbar-brand {
     font-size: 1.2em;
-    font-weight: 600;
-}
-
-.navbar-item {
-   
+    font-weight: 600; 
 }
 
 .body-content {
@@ -246,9 +242,6 @@ th {
         color: lightgray;
 }
 
-    .header__logo-display {
-
-    }
         .header__logo-img {
             width: 155px;
             margin-right: 1.6em;
@@ -284,6 +277,44 @@ table.dataTable.dtr-column>tbody>tr>td.control:before {
 td.control::before {
     margin-left: 20em;
 }
+/* Center the form horizontally */
+.master-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+/* Add some padding to the form elements */
+.form-group {
+    padding: 10px;
+}
 
+/* Style the labels */
+label {
+    font-weight: bold;
+}
+
+/* Style the input fields */
+input[type="text"], input[type="number"], input[type="date"] {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+    background-color: #3e8e41;
+}
 

@@ -43,42 +43,47 @@ def master_data():
 @app.route('/master_record/<int:master_id>', methods=['GET', 'POST', 'PUT'])
 def master_record(master_id):
     if request.method == "POST":
-        # Add new test record
-        unit = request.form['unit']
-        nom = request.form['nom']
-        actual = request.form['actual']
-        tol = request.form['tol']
-        temp = request.form['temp']
-        humidity = request.form['humidity']
-        tech = request.form['tech']
-        cursor.execute('INSERT INTO TEST (Master_ID, unit, nom, actual, tol, temp, humidity, tech) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                       (master_id, unit, nom, actual, tol, temp, humidity, tech))
-        cursor.commit()
-        flash("Test results added successfully!", "success")
-        return redirect(url_for("master_record", master_id=master_id))
+        action = request.form.get('action')
+        if action == 'update_master':
+            # Update master record
+            an = request.form['an']
+            model = request.form['model']
+            sn = request.form['sn']
+            nom = request.form['nom']
+            loc = request.form['loc']
+            cal_date = request.form['cal_date']
+            due = request.form['due']
+            cycle = request.form['cycle']
+            manufacture = request.form['manufacture']
+            proc = request.form['proc']
+            special_cal = request.form['special_cal']
+            note = request.form['note']
+            cost = request.form['cost']
+            standard = request.form['standard']
+            facility = request.form['facility']
+            cursor.execute('UPDATE MASTER SET AN = ?, Model = ?, SN = ?, NOM = ?, LOC = ?, [CAL DATE] = ?, DUE = ?, CYCLE = ?, MANUFACTURE = ?, [PROC] = ?, [SPECIAL CAL] = ?, NOTE = ?, COST = ?, STANDARD = ?, Facility = ? WHERE ID = ?',
+               (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, master_id))
+            cursor.commit()
+            flash("CHANGES added successfully!", "success")
+            return redirect(url_for("master_record", master_id=master_id))
+        else:
+            # Add new test record
+            unit = request.form['unit']
+            nom = request.form['nom']
+            actual = request.form['actual']
+            tol = request.form['tol']
+            temp = request.form['temp']
+            humidity = request.form['humidity']
+            tech = request.form['tech']
+            cursor.execute('INSERT INTO TEST (Master_ID, unit, nom, actual, tol, temp, humidity, tech) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                           (master_id, unit, nom, actual, tol, temp, humidity, tech))
+            cursor.commit()
+            flash("Test results added successfully!", "success")
+            return redirect(url_for("master_record", master_id=master_id))
     elif request.method == "PUT":
-        # Update master record
-        data = request.get_json()
-        an = data['an']
-        model = data['model']
-        sn = data['sn']
-        nom = data['nom']
-        loc = data['loc']
-        cal_date = data['cal_date']
-        due = data['due']
-        cycle = data['cycle']
-        manufacture = data['manufacture']
-        proc = data['proc']
-        special_cal = data['special_cal']
-        note = data['note']
-        cost = data['cost']
-        standard = data['standard']
-        facility = data['facility']
-        cursor.execute('UPDATE MASTER SET AN = ?, Model = ?, SN = ?, NOM = ?, LOC = ?, [CAL DATE] = ?, DUE = ?, CYCLE = ?, MANUFACTURE = ?, PROC = ?, [SPECIAL CAL] = ?, NOTE = ?, COST = ?, STANDARD = ?, Facility = ? WHERE ID = ?',
-                       (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, master_id))
-        cursor.commit()
-        flash("Master record updated successfully!", "success")
-        return redirect(url_for("master_record", master_id=master_id))
+        # This code handles the AJAX PUT request for updating the master record
+        # The master record is updated in the if statement above
+        pass
     else:
         if 'json' in request.args:
             # Return JSON data for DataTables

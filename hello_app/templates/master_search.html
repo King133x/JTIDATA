@@ -1,9 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-
-<head>
-    <title>Master Data Search</title>
-    <script>
+    <head>
+        <title>Master Data Search</title>
+        <script>
         $(document).ready(function () {
             $('#master-table').DataTable({
                 responsive: {
@@ -62,53 +61,54 @@
                 ]
             });
         });
-    </script>
-</head>
-<body>
-    <h2>Master list </h2>
-    <table id="master-table" class="display nowrap" style="width:100%">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>AN</th>
-                <th>Model</th>
-                <th>SN</th>
-                <th>NOM</th>
-                <th>LOC</th>
-                <th>FACILITY</th>
-                <th>MANUFACTURE</th>
-                <th>COST</th>
-                <th>STANDARD</th>
-                <th>CYCLE</th>
-                <th>PROC</th>
-                <th>CAL DATE</th>
-                <th>NOTE</th>
-                <th>SPECIAL CAL</th>
-                <th>DUE</th>
-            </tr>
-        </thead>
-    </table>
-    {% if overdue_table %}
-    <h2>OVERDUE list </h2>
-	<table id="overdue_table">
-		<thead>
-			<tr>
-				<th>MID</th>
-				<th>DATE</th>
-				<th>NOM</th>
-			</tr>
-
-		</thead>
-		<tbody>
-			{% for result in overdue_table %}
-			<tr>
-				<td><a href="{{ url_for('master_record', master_id=result['master_id']) }}">{{ result['master_id'] }}</a></td>
-				<td>{{ result['due_date'] }}</td>
-				<td>{{ result['NOM'] }}</td>
-				
-			{% endfor %}
-		</tbody>
-	</table>
-	{% endif %}
-</body>
-{% endblock %}
+        </script>
+    </head>
+    <body>
+        <h2>Master list</h2>
+        <table id="master-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>AN</th>
+                    <th>Model</th>
+                    <th>SN</th>
+                    <th>NOM</th>
+                    <th>LOC</th>
+                    <th>FACILITY</th>
+                    <th>MANUFACTURE</th>
+                    <th>COST</th>
+                    <th>STANDARD</th>
+                    <th>CYCLE</th>
+                    <th>PROC</th>
+                    <th>CAL DATE</th>
+                    <th>NOTE</th>
+                    <th>SPECIAL CAL</th>
+                    <th>DUE</th>
+                </tr>
+            </thead>
+        </table>
+        {% if overdue_table %}
+            <h2>OVERDUE LIST</h2>
+            <table id="overdue_table">
+                <thead>
+                    <tr>
+                        <th>MID</th>
+                        <th>DATE</th>
+                        <th>NOM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in overdue_table %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('master_record', master_id=result['master_id']) }}">{{ result['master_id'] }}</a>
+                            </td>
+                            <td>{{ result['due_date'] }}</td>
+                            <td>{{ result['NOM'] }}</td>
+                        </tr>    
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </body>
+    {% endblock content %}

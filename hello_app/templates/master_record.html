@@ -3,6 +3,24 @@
 
 <head>
 	<title>Data Results</title>
+	<script>
+		$('form').submit(function(event) {
+			event.preventDefault();
+			$.ajax({
+				type: 'PUT',
+				url: "{{ url_for('master_record', master_id=master_id) }}",
+				data: $('form').serialize(),
+				success: function(response) {
+					$('.alert-success').remove();
+					$('form').prepend('<div class="alert alert-success">{{ message }}</div>');
+				},
+				error: function() {
+					$('.alert-danger').remove();
+					$('form').prepend('<div class="alert alert-danger">An error occurred while updating the master record.</div>');
+				}
+			});
+		});
+	</script>
 </head>
 
 <body>
@@ -116,5 +134,71 @@
 		<input type="text" name="tech" id="tech" required>
 		<button type="submit">Add Test Result</button>
 	</form>
+	<br />
+	<!-- Update Master form  -->
+	<form action='/master_record/{{ master_id }}' method="post">
+		<input type="hidden" name="master_id" value="{{ master_id }}">
+		<div class="form-group">
+			<label for="an">AN:</label>
+			<input type="text" name="an" id="an" value="{{ master_results[0]['AN'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="model">Model:</label>
+			<input type="text" name="model" id="model" value="{{ master_results[0]['Model'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="sn">SN:</label>
+			<input type="text" name="sn" id="sn" value="{{ master_results[0]['SN'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="nom">NOM:</label>
+			<input type="text" name="nom" id="nom"  value="{{ master_results[0]['NOM'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="loc">LOC:</label>
+			<input type="text" name="loc" id="loc" value="{{ master_results[0]['LOC'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="cal_date">Calibration Date:</label>
+			<input type="date" name="cal_date" id="cal_date" value="{{ master_results[0]['CAL DATE'] }}">
+		</div>
+		<div class="form-group">
+			<label for="due">Due:</label>
+			<input type="date" name="due" id="due" value="{{ master_results[0]['DUE'] }}">
+		</div>
+		<div class="form-group">
+			<label for="cycle">Cycle:</label>
+			<input type="number" name="cycle" id="cycle" value="{{ master_results[0]['CYCLE'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="manufacture">Manufacturer:</label>
+			<input type="text" name="manufacture" id="manufacture" value="{{ master_results[0]['MANUFACTURE'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="proc">Proc:</label>
+			<input type="text" name="proc" id="proc" value="{{ master_results[0]['PROC'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="special_cal">Special Cal:</label>
+			<input type="text" name="special_cal" id="special_cal" value="{{ master_results[0]['SPECIAL CAL'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="note">Note:</label>
+			<input type="text" name="note" id="note" value="{{ master_results[0]['NOTE'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="cost">Cost:</label>
+			<input type="number" name="cost" id="cost" value="{{ master_results[0]['COST'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="standard">Standard:</label>
+			<input type="text" name="standard" id="standard" value="{{ master_results[0]['STANDARD'] }}" required>
+		</div>
+		<div class="form-group">
+			<label for="facility">Facility:</label>
+			<input type="text" name="facility" id="facility" value="{{ master_results[0]['Facility'] }}" required>
+		</div>
+		<button type="submit" name="action" value="update_master">Update Master Record</button>
+	</form>
 </body>
-{% endblock %}
+{% endblock content %}

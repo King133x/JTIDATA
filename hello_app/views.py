@@ -16,10 +16,32 @@ def query_to_dict(query_results):
     return [dict(zip([column[0] for column in cursor.description], row)) for row in query_results]
 ##################################################################################################################################################################################################
 # defines route to send to home page
-@app.route("/")
-@app.route("/home")
+@app.route("/home", methods=["GET", "POST"])
 def home():
-    return render_template("home.html")
+    if request.method == "POST":
+        # insert a new record into the MASTER table
+        an = request.form['an']
+        model = request.form['model']
+        sn = request.form['sn']
+        nom = request.form['nom']
+        loc = request.form['loc']
+        cal_date = request.form['cal_date']
+        due = request.form['due']
+        cycle = request.form['cycle']
+        manufacture = request.form['manufacture']
+        proc = request.form['proc']
+        special_cal = request.form['special_cal']
+        note = request.form['note']
+        cost = request.form['cost']
+        standard = request.form['standard']
+        facility = request.form['facility']
+        type = request.form['type']
+        cursor.execute('INSERT INTO MASTER (AN, Model, SN, NOM, LOC, [CAL DATE], DUE, CYCLE, MANUFACTURE, [PROC], [SPECIAL CAL], NOTE, COST, STANDARD, Facility, TYPE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                       (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, type))
+        flash("Equipment added successfully!", "success")
+        return redirect(url_for("home"))
+    else:
+        return render_template("home.html")
 ##################################################################################################################################################################################################
 # handles the data search ajax uses post to get data else sends to search page
 @app.route('/master_data/', methods=['GET', 'POST'])
@@ -61,8 +83,9 @@ def master_record(master_id):
             cost = request.form['cost']
             standard = request.form['standard']
             facility = request.form['facility']
-            cursor.execute('UPDATE MASTER SET AN = ?, Model = ?, SN = ?, NOM = ?, LOC = ?, [CAL DATE] = ?, DUE = ?, CYCLE = ?, MANUFACTURE = ?, [PROC] = ?, [SPECIAL CAL] = ?, NOTE = ?, COST = ?, STANDARD = ?, Facility = ? WHERE ID = ?',
-               (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, master_id))
+            type = request.form['TYPE']
+            cursor.execute('UPDATE MASTER SET AN = ?, Model = ?, SN = ?, NOM = ?, LOC = ?, [CAL DATE] = ?, DUE = ?, CYCLE = ?, MANUFACTURE = ?, [PROC] = ?, [SPECIAL CAL] = ?, NOTE = ?, COST = ?, STANDARD = ?, Facility = ?, TYPE = ? WHERE ID = ?',
+               (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, type, master_id))
             cursor.commit()
             flash("CHANGES added successfully!", "success")
             return redirect(url_for("master_record", master_id=master_id))
@@ -81,9 +104,28 @@ def master_record(master_id):
             flash("Test results added successfully!", "success")
             return redirect(url_for("master_record", master_id=master_id))
     elif request.method == "PUT":
-        # This code handles the AJAX PUT request for updating the master record
-        # The master record is updated in the if statement above
-        pass
+        # Handle PUT request to create a new item in the master table
+        an = request.form.get('an')
+        model = request.form.get('model')
+        sn = request.form.get('sn')
+        nom = request.form.get('nom')
+        loc = request.form.get('loc')
+        cal_date = request.form.get('cal_date')
+        due = request.form.get('due')
+        cycle = request.form.get('cycle')
+        manufacture = request.form.get('manufacture')
+        proc = request.form.get('proc')
+        special_cal = request.form.get('special_cal')
+        note = request.form.get('note')
+        cost = request.form.get('cost')
+        standard = request.form.get('standard')
+        facility = request.form.get('facility')
+        type = request.form.get('type')
+        cursor.execute('INSERT INTO MASTER (AN, Model, SN, NOM, LOC, [CAL DATE], DUE, CYCLE, MANUFACTURE, [PROC], [SPECIAL CAL], NOTE, COST, STANDARD, Facility, TYPE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                       (an, model, sn, nom, loc, cal_date, due, cycle, manufacture, proc, special_cal, note, cost, standard, facility, type))
+        cursor.commit()
+        flash("New item added successfully!", "success")
+        return redirect(url_for("home"))
     else:
         if 'json' in request.args:
             # Return JSON data for DataTables

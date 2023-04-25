@@ -17,6 +17,7 @@ def query_to_dict(query_results):
 ##################################################################################################################################################################################################
 # defines route to send to home page
 @app.route("/home", methods=["GET", "POST"])
+@app.route("/")
 def home():
     if request.method == "POST":
         # insert a new record into the MASTER table

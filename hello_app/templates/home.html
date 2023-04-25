@@ -3,7 +3,6 @@
 Home
 {% endblock %}
 {% block content %}
-<p>Home page FOR JTI CALIBRATION</p>
 {% for file_link in file_links %}
     <a href="{{ file_link.path }}">{{ file_link.name }}</a>
 {% endfor %}
